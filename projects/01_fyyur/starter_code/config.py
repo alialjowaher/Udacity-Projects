@@ -10,4 +10,5 @@ DEBUG = True
 
 # TODO IMPLEMENT DATABASE URL
 SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:alinet20@localhost:5432/fyyurapp'
-
+# stop track notfications from terminal 
+SQLALCHEMY_TRACK_MODIFICATIONS = False

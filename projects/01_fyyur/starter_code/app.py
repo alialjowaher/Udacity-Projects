@@ -2,20 +2,24 @@
 # Imports
 #----------------------------------------------------------------------------#
 
+import datetime
 from os import name, stat
-from config import SQLALCHEMY_DATABASE_URI
-import json
+
 import dateutil.parser
 import babel
-from flask import Flask, render_template, request, Response, flash, redirect, url_for
+from flask import Flask, abort, render_template, request, Response, flash, redirect, url_for
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
 import logging
 from logging import Formatter, FileHandler
-from flask_wtf import FlaskForm as BaseForm
+from flask_wtf import FlaskForm
+from flask_wtf.csrf import CSRFProtect
+from sqlalchemy.orm.session import Session
 from forms import *
 from flask_migrate import Migrate, migrate
-
+#To resolve pylance import issue in VS-ccode 
+#from .config import SQLALCHEMY_DATABASE_URI
+#from .forms import *
 #----------------------------------------------------------------------------#
 # App Config.
 #----------------------------------------------------------------------------#
@@ -25,9 +29,8 @@ moment = Moment(app)
 app.config.from_object('config')
 db = SQLAlchemy(app)
 
-
 # TODO: connect to a local postgresql database
-
+csrf = CSRFProtect(app)
 migrate = Migrate(app, db)
 
 #----------------------------------------------------------------------------#
@@ -38,17 +41,17 @@ class Venue(db.Model):
     __tablename__ = 'Venue'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String())
-    city = db.Column(db.String(120))
-    state = db.Column(db.String(120))
-    address = db.Column(db.String(120))
-    phone = db.Column(db.String(120))
-    website = db.Column(db.String(120))
-    image_link = db.Column(db.String(500))
+    name = db.Column(db.String(), nullable=False)
+    city = db.Column(db.String(120), nullable=False)
+    state = db.Column(db.String(), nullable=False)
+    address = db.Column(db.String(), nullable=False)
+    phone = db.Column(db.String(), nullable=False)
+    website = db.Column(db.String())
+    image_link = db.Column(db.String())
     facebook_link = db.Column(db.String(120))
-    is_seeking_talent = db.Column(db.Boolean)
+    is_seeking_talent = db.Column(db.Boolean ,default=True)
     seeking_talent_messge = db.Column(db.String())
-    genres = db.Column(db.String(120))
+    genres = db.Column(db.ARRAY(db.String()), nullable=False)
     shows = db.relationship('Show', backref='Venue', lazy='dynamic') # lazy = True or lazy=dynamic which works better in our case !?
 
 
@@ -79,9 +82,9 @@ class Show(db.Model):
     __tablename__ = 'shows'
 
     id =id = db.Column(db.Integer(), primary_key=True)
-    venue_id = db.Column('venue_id', db.Integer, db.ForeignKey('Venue.id'), primary_key=True)
-    artist_id=db.Column('artist_id', db.Integer, db.ForeignKey('Artist.id'), primary_key=True)
-    start_date = db.Column(db.DateTime, nullable=False)
+    venue_id = db.Column(db.Integer, db.ForeignKey('Venue.id'), nullable=False)
+    artist_id=db.Column(db.Integer, db.ForeignKey('Artist.id'), nullable=False)
+    start_date = db.Column(db.DateTime, nullable=False , default= datetime.now)
 
 # https://docs.sqlalchemy.org/en/13/orm/basic_relationships.html#many-to-many
 # https://www.tutorialspoint.com/sqlalchemy/sqlalchemy_orm_many_to_many_relationships.htm
@@ -382,38 +385,40 @@ def create_venue_form():
 def create_venue_submission():
   # TODO: insert form data as a new Venue record in the db, instead
   # TODO: modify data to be the data object returned from db insertion
+    
     try:
-          form = VenueForm()
-          name = form.name.data
-          if request.method == 'POST':
-            form.validate_on_submit()
-            
-            name = form.name.data
-            city = form.city.data
-            state = form.state.data
-            address = form.address.data
-            phone = form.phone.data
-            geners = form.genres.data
-            image = form.image_link.data
-            facebook = form.facebook_link.data
-            website = form.website.data
-            seeking_talent = form.is_seeking_talent.data
-            seeking_description = form.seeking_description.data
+        form = VenueForm()
+        # form.validate()
+        name = form.name.data
+        city = form.city.data
+        state = form.state.data
+        address = form.address.data
+        phone = form.phone.data
+        genres = form.genres.getlist
+        image_link = form.image_link.data
+        facebook_link = form.facebook_link.data
+        website = form.website.data
+        is_seeking_talent = form.is_seeking_talent.data
+        seeking_description = form.seeking_description.data
+       
           
-            new_veune = Venue(name=name,city=city,state=state,address=address,phone=phone,geners=geners,image=image,facebook=facebook,
-                              website=website,is_seeking_talent=seeking_talent,seeking_talent_messge=seeking_description)
-
-            db.session.add(new_veune)
-            db.session.commit()
-            flash('Venue ' + request.form['name'] + ' was successfully listed!')
+        veune = Venue(name=name,city=city,state=state,address=address,phone=phone,geners=genres,
+                      image=image_link,facebook=facebook_link,website=website,is_seeking_talent=is_seeking_talent,
+                      seeking_talent_messge=seeking_description)
+        print(request.form)
+        db.session.add(veune)
+        db.session.commit()
+        flash('Venue ' + request.form['name'] + ' was successfully listed!')
 
     except:
       db.session.rollback()
-      flash('An error occurred. Venue ' + name + ' could not be listed.')
+      flash('An error occurred. Venue ' + request.form['name'] + ' could not be listed.')
+      print(request.form)
+      abort(400)
     finally:
       db.session.close()
-
-
+    
+    
   # on successful db insert, flash success
   # TODO: on unsuccessful db insert, flash an error instead.
   # e.g., flash('An error occurred. Venue ' + data.name + ' could not be listed.')
