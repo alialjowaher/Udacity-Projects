@@ -2,7 +2,7 @@ from datetime import datetime
 from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, SelectMultipleField, DateTimeField
 from wtforms.fields.core import IntegerField
-from wtforms.validators import DataRequired, AnyOf, URL , NumberRange
+from wtforms.validators import DataRequired, AnyOf, Length, URL , Regexp
 
 
 class ShowForm(FlaskForm):
@@ -85,7 +85,9 @@ class VenueForm(FlaskForm):
         'address', validators=[DataRequired()]
     )
     phone = StringField(
-        'phone'
+        # phone number regex https://ihateregex.io/expr/phone
+        'phone', validators=[DataRequired(),
+                             Regexp("^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$",message='Please Enter a Valid phone number')]
     )
     image_link = StringField(
         'image_link'
@@ -207,7 +209,8 @@ class ArtistForm(FlaskForm):
     )
     phone = StringField(
         # TODO implement validation logic for state
-        'phone'
+         # phone number regex https://www.codegrepper.com/code-examples/python/regex+pattern+validate+phone+number
+        'phone', validators=[Regexp('^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$',message='Please Enter a Valid phone number')]
     )
     image_link = StringField(
         'image_link'
@@ -257,16 +260,3 @@ class ArtistForm(FlaskForm):
         'seeking_venue_messge'
     )
 
-class ShowForm(FlaskForm):
-    artist_id = IntegerField(
-        'artist_id', validators=[DataRequired(),NumberRange(min=0, max=None, message='Please enter a valid Artist ID')]
-    )
-    venue_id= IntegerField(
-        'venue_id', validators=[DataRequired(),NumberRange(min=0, max=None, message='Please enter a valid Venue ID')]
-    )
-    start_time =DateTimeField(
-        'start_time',
-        validators=[DataRequired()],
-        default= datetime.today()
-    )
-    

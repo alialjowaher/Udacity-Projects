@@ -53,10 +53,8 @@ class Venue(db.Model):
     is_seeking_talent = db.Column(db.Boolean, default=True)
     seeking_talent_messge = db.Column(db.String())
     genres = db.Column(db.ARRAY(db.String()), nullable=False)
-    shows = db.relationship(
-        "Show", backref="Venue", lazy="dynamic"
-    )  # lazy = True or lazy=dynamic which works better in our case !?
-
+    shows = db.relationship("Show", backref="Venue", lazy="dynamic" ,)  # lazy = True or lazy=dynamic which works better in our case !?
+    
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
 
     # Relationship with Shows (Show_id)
@@ -393,8 +391,8 @@ def create_venue_submission():
     # TODO: modify data to be the data object returned from db insertion
     # TODO: Form Validation
     try:
-        form = VenueForm()
-        form.validate()
+        form = VenueForm(request.form)
+        # if form.validate_on_submit():
         name = form.name.data
         city = form.city.data
         state = form.state.data
@@ -804,7 +802,7 @@ def edit_venue_submission(venue_id):
     # venue record with ID <venue_id> using the new attributes
     try:
         form = VenueForm()
-
+        
         venue = Venue.query.get(venue_id)
 
         venue.name = form.name.data
