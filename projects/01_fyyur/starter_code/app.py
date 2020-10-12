@@ -20,6 +20,8 @@ from wtforms.validators import ValidationError
 from forms import *
 from flask_migrate import Migrate, migrate
 from models import Venue, Artist, Show, db
+from flask_debugtoolbar import DebugToolbarExtension
+
 # ----------------------------------------------------------------------------#
 # App Config.
 # ----------------------------------------------------------------------------#
@@ -29,6 +31,8 @@ moment = Moment(app)
 app.config.from_object('config')
 db.init_app(app) 
 migrate = Migrate(db)
+toolbar = DebugToolbarExtension(app)
+
 # ----------------------------------------------------------------------------#
 # Filters.
 # ----------------------------------------------------------------------------#
@@ -332,7 +336,6 @@ def create_venue_submission():
     # TODO: Form Validation
     try:
         form = VenueForm(request.form)
-        # if form.validate_on_submit():
         name = form.name.data
         city = form.city.data
         state = form.state.data
