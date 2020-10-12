@@ -537,8 +537,7 @@ def show_artist(artist_id):
     # shows the venue page with the given venue_id
     # TODO: replace with real venue data from the venues table, using venue_id
     artist = Artist.query.get(artist_id)
-
-    # shows = Show.query.filter_by(artist_id=artist_id)
+    # https://www.tutorialspoint.com/sqlalchemy/sqlalchemy_core_using_joins.htm
     shows = Show.query.join(Artist,(Show.artist_id == artist_id))
     upcoming_shows = []
     past_shows = []
