@@ -151,7 +151,7 @@ def venues():
         num_upcoming_shows = 0
 
         shows = Show.query.filter_by(venue_id=venue.id).all()
-
+        # shows = Show.query(Venue).all()
         for show in shows:
             if show.start_date > datetime.now():
                 num_upcoming_shows += 1
@@ -204,7 +204,7 @@ def search_venues():
 
     for venue in search_venues:
 
-        shows = Show.query.filter_by(venue_id=venue.id).all()
+        shows = Show.query.join(Venue)
         num_upcoming_shows = 0
 
         for show in shows:
@@ -246,7 +246,10 @@ def show_venue(venue_id):
     # https://stackoverflow.com/questions/58319471/python-sqlalchemy-attributeerror-basequery-object-has-no-attribute-id
 
     venue = Venue.query.get(venue_id)
-    shows = Show.query.filter_by(venue_id=venue_id)
+
+
+    shows = Show.query.join(Venue,(Show.venue_id == venue_id))
+    
     upcoming_shows = []
     past_shows = []
 
@@ -291,6 +294,7 @@ def show_venue(venue_id):
         "upcoming_shows": upcoming_shows,
         "past_shows_count": len(past_shows),
         "upcoming_shows_count": len(upcoming_shows),
+        
     }
 
     # data1={
@@ -494,11 +498,12 @@ def search_artists():
 
     for artist in search_artists:
 
-        shows = Show.query.filter_by(artist_id=artist.id).all()
-        num_upcoming_shows = 0
+       
+       shows = Show.query.join(Artist)
+       num_upcoming_shows = 0
 
-        for show in shows:
-            if show.start_date > datetime.now():
+       for show in shows:
+        if show.start_date > datetime.now():
                 num_upcoming_shows += 1
 
     for artist in search_artists:
@@ -533,8 +538,8 @@ def show_artist(artist_id):
     # TODO: replace with real venue data from the venues table, using venue_id
     artist = Artist.query.get(artist_id)
 
-    shows = Show.query.filter_by(artist_id=artist_id)
-
+    # shows = Show.query.filter_by(artist_id=artist_id)
+    shows = Show.query.join(Artist,(Show.artist_id == artist_id))
     upcoming_shows = []
     past_shows = []
 
