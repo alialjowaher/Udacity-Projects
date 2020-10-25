@@ -16,6 +16,7 @@ class FormView extends Component {
   }
 
   componentDidMount(){
+   
     $.ajax({
       url: `/categories`, //Done: update request URL
       type: "GET",
@@ -28,13 +29,14 @@ class FormView extends Component {
         return;
       }
     })
+  
   }
 
 
   submitQuestion = (event) => {
     event.preventDefault();
     $.ajax({
-      url: '/questions', //TODO: update request URL
+      url: '/questions/add', //Done: update request URL
       type: "POST",
       dataType: 'json',
       contentType: 'application/json',

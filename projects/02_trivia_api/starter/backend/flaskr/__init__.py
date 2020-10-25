@@ -40,7 +40,7 @@ def create_app(test_config=None):
     @app.route('/categories', methods=['GET'])
     def get_categories():
         all_categories = Category.query.order_by(Category.id).all()
-        categories = []
+        categories = {}
 
         # @TODO: return 404 formated error
         if all_categories is None:
@@ -48,7 +48,13 @@ def create_app(test_config=None):
         else:
 
             for category in all_categories:
-                categories.append(category.type)
+                # categories.append(category.type)
+                  
+                # categories.extend({
+                #   'id':category.id,
+                #   'type':category.type
+                # })
+                 categories[category.id] = category.type
 
             return jsonify({
                 'success': True,
@@ -85,10 +91,10 @@ def create_app(test_config=None):
             abort(404)
         else:
             all_categories = Category.query.order_by(Category.id).all()
-            categories = []
+            categories = {}
             for category in all_categories:
-                categories.append(category.type.lower())
-
+                # categories.append(category.type.lower())
+               categories[category.id] = category.type.lower()
             return jsonify({
                 'success': True,
                 'questions': current_questions,
@@ -133,7 +139,7 @@ def create_app(test_config=None):
   the form will clear and the question will appear at the end of the last page
   of the questions list in the "List" tab.  
   '''
-    @app.route('/questions', methods=['POST'])
+    @app.route('/questions/add', methods=['POST'])
     def create_question():
     
                   content = request.get_json()
@@ -177,19 +183,19 @@ def create_app(test_config=None):
     def search_question():
         search = request.get_json()
         search_term = search.get('searchTerm','')
-        print(search)
-        print(search_term)
+        
         try:
             search_questions = Question.query.filter(Question.question.ilike(f'%{search_term}%')).all()
+            
             current_questions = pagination(request, search_questions)
             return jsonify({
               'success': True,
               'questions': current_questions,
-              'total_questions': len(search_questions)
-            })
+              'total_questions': len(search_questions),
+           })
         except:
-          abort(404)
-    
+           abort(404)
+          
     '''
   @TODO: 
   Create a GET endpoint to get questions based on category. 
@@ -198,7 +204,23 @@ def create_app(test_config=None):
   categories in the left column will cause only questions of that 
   category to be shown. 
   '''
+    @app.route('/categories/<int:id>/questions', methods=['GET'])
+    def get_questions_in_categories(id):
+          category = Category.query.get(id)
+          
+          if( category is None):
+            abort(422)
 
+          filtered_questions = Question.query.filter_by(category=id).all()
+          questions_in_category = pagination(request,filtered_questions)
+   
+          return jsonify({
+                'success': True,
+                'questions': questions_in_category,
+                'total_questions': len(filtered_questions),
+                'current_category': category.type
+
+            })
     '''
   @TODO: 
   Create a POST endpoint to get questions to play the quiz. 
@@ -210,7 +232,35 @@ def create_app(test_config=None):
   one question at a time is displayed, the user is allowed to answer
   and shown whether they were correct or not. 
   '''
+    @app.route('/quizzes', methods=['POST'])
+    def play_quiz_game():
+              data = request.get_json()
+              previous_questions = data.get('previous_questions')
+              category = data.get('quiz_category')
 
+              if(category is None) or (previous_questions is None):
+                abort(400)
+              
+              if (category['id'] == 0):
+                  questions = Question.query.all()
+              else:
+                questions = Question.query.filter_by(
+                  category=category['id']).all()
+
+              def get_random_question():
+                random_questions = questions[random.randint(0, len(questions)-1)]
+                if random_questions.id in previous_questions:
+                  return get_random_question()
+                else:
+                  return random_questions
+
+              next_question = get_random_question()
+              
+
+              return jsonify({
+                'success': True,
+                'question': next_question.format()
+              })
     '''
   @TODO: 
   Create error handlers for all expected errors 
