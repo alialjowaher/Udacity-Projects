@@ -32,11 +32,12 @@ class TriviaTestCase(unittest.TestCase):
 
     """
     TODO
-    Write at least one test for each test for successful operation and for expected errors.
+    Write at least one test for each test for successful operation and for
+    expected errors.
     """
 
     def test_get_catgories(self):
-        res = self.client().get('/')
+        res = self.client().get('/categories')
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertTrue(data['categories'])
@@ -49,14 +50,16 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['questions'])
         self.assertTrue(data['total_questions'])
         self.assertTrue(data['categories'])
-    
-    # def test_404_requesting_beyond_valid_page(self):
-    #     res = self.client().get('/questions?page=1000')
-    #     data = json.loads(res.data)
-    #     self.assertEqual(res.status_code, 404)
-    #     self.assertEqual(data['success'], False)
-    #     self.assertEqual(data['message'], 'resource not found')
+
+    def test_404_requesting_beyond_valid_page(self):
+        res = self.client().get('/questions?page=1000')
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'The Resource Was Not Found')
 
 # Make the tests conveniently executable
+
+
 if __name__ == "__main__":
     unittest.main()
