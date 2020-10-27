@@ -247,8 +247,18 @@ def create_app(test_config=None):
             category_used_questions = [
                 question for question in questions if question.id not
                 in previous_questions]
-
-            random_questions = random.choice(category_used_questions)
+            all_questions = Question.query.all()
+            all_categoryies = [
+                question for question in all_questions if question.id not
+                in previous_questions]
+            '''
+             if the current category reaches 0 questions , add extra random 
+             questions from other categories 
+            '''
+            if (len(category_used_questions) == 0):
+                random_questions = random.choice(all_categoryies)
+            else:
+                random_questions = random.choice(category_used_questions)
 
             return random_questions
 
