@@ -91,7 +91,7 @@ def create_app(test_config=None):
             categories = {}
             for category in all_categories:
                 
-                # catgories need to be lower case due to icons from frontend being lower case
+                # catgory icon images from frontend  are lower case
                 categories[category.id] = category.type.lower()
 
             return jsonify({
@@ -230,6 +230,7 @@ def create_app(test_config=None):
     @app.route('/quizzes', methods=['POST'])
     def play_quiz_game():
         data = request.get_json()
+        print(data)
         previous_questions = data.get('previous_questions')
         category = data.get('quiz_category')
 
@@ -253,8 +254,8 @@ def create_app(test_config=None):
                 question for question in all_questions if question.id not
                 in previous_questions]
             '''
-             if the current has less than 5 questions in it add more random 
-             questions from other categories up to a total of 5  
+             if the current has less than 5 questions in it add more random
+             questions from other categories up to a total of 5
             '''
             if (len(category_used_questions) == 0):
                 random_questions = random.choice(all_categoryies)

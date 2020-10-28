@@ -279,9 +279,10 @@ be added picked up to a total of 5.
 
 * **Quiz Game Attributes**
     
-    - category (optional)
-    
-- Request Arguments: None . 
+    - category id (required)
+    - category type (required)
+    - previous questions (required)
+- Request Arguments: All Required. 
 - Returns: an object with  key:value pairs , includes next questions and success variables.
 
 
