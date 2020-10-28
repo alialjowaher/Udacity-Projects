@@ -70,7 +70,7 @@ One note before you delve into your tasks: for each endpoint you are expected to
 
 
 # API 
-
+* All Responses are in JSON format including Errors.
 ## Endpoints
 
 ```
@@ -101,6 +101,8 @@ DELETE 'questions/<int:question_id>'
 - Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs.
 
 curl http://127.0.0.1:5000/categories
+
+**Response:** 
 ```
 {'1' : "Science",
 '2' : "Art",
@@ -130,8 +132,7 @@ curl http://127.0.0.1:5000/categories
 
 curl http://127.0.0.1:5000/questions
 
-**Response** 
-
+**Response:** 
 ```
 {
   "categories": {
@@ -154,9 +155,213 @@ curl http://127.0.0.1:5000/questions
 
 ```
 
+### GET **'/categories/<int:id>/questions'**
+
+- Fetches a dictionary of **10 questions** per **page** for a specific **category**.
+
+* **Questions for Category Attributes**
+    - id 
+    - question 
+    - answer 
+    - category 
+    - difficulty
+
+- Request Arguments: '<int:id>' (**required**) represents a category code 
+- current category as key:value is returned befor the Questions for Category dictonary.
+- **Total Questions** and **success** variables are returned after the dictonary.
+- Returns: A  dictionary of objects with a  key, questions, answer, category , difficulty as key:value pairs.
+
+curl http://127.0.0.1:5000/categories/<int:id>/questions
+
+**Response:** 
+```
+{
+  "current_category": "Science",
+  "questions": [
+    {
+      "answer": "The Liver",
+      "category": 1,
+      "difficulty": 4,
+      "id": 20,
+      "question": "What is the heaviest organ in the human body?"
+    },
+    ... Omitted for bravery
+  ],
+  "success": true,
+  "total_questions": 3
+
+```
+
+### POST **'/questions/add'**
+
+- Create a Question in a specific category.
+
+* **Add a Question Attributes**
+    
+    - question (required) 
+    - answer  (required)
+    - category (required)
+    - difficulty (required)
+
+- Request Arguments: All Attributes are required. 
+- Returns: an object with  key:value pairs , includes success and message variable.
+
+curl -X POST http://127.0.0.1:5000//questions/add
+
+**Response:** 
+```
+
+{
+    'success': True,
+    'message': 'The Question has been added Successfully !',
+ }
+
+```
+
+### DELETE **'/questions/<int:question_id>'**
+
+- Delete a specific question using the Question ID.
+
+* **DELETE a Question Attributes**
+    
+    - id (required) 
+    
+- Request Arguments: id . 
+- Returns: an object with  key:value pairs , includes success and question id variable.
+
+curl -X DELETE http://127.0.0.1:5000/questions/<int:questions_id>
+
+**Response:** 
+```
+
+{
+   'success': True,
+   'question_id': question_id,
+ }
+
+```
+
+### POST **'/questions/search'**
+
+- Search using questions titles .
+- Return partail matchs.
+
+* **Search Questions Attributes**
+    
+    - searchTerm (required)
+    
+- Request Arguments: searchTerm . 
+- Returns: an object with  key:value pairs , includes matching questions, success and 
+total questions variables.
+
+curl -X POST http://127.0.0.1:5000/questions/search>
+
+**Response:** 
+```
+{
+    'success': True,
+   'questions': current_questions,
+   'total_questions': len(search_questions),
+}
+
+```
 
 
+### POST **'/quizzes'**
 
+- Play the quiz game 
+- Returns a collection of 5 questions.
+- If no category is provided a random question will be picked.
+- ** If the category has less than 5 questions , random questions from other categories will
+be added picked up to a total of 5.
+
+* **Quiz Game Attributes**
+    
+    - category (optional)
+    
+- Request Arguments: None . 
+- Returns: an object with  key:value pairs , includes next questions and success variables.
+
+
+curl -X POST http://127.0.0.1:5000/quizzes>
+
+**Response:** 
+```
+{
+    'success': True,
+    'question': next_question.format()
+}
+
+```
+
+## HTTP error messages 
+
+* This section cover the HTTP Errors and responses description.
+
+
+### Error Code : **400** 
+
+- Description : **BAD REQUEST** , the sumbitted data contained invalid values.
+
+``` 
+{
+    'success': False,
+    'error': 400,
+    'message': 'A Bad Request'
+} 
+
+```
+
+### Error Code : **404** 
+
+- Description : **NOT FOUND** , the requested resource can't be located.
+
+``` 
+{
+    'success': False,
+    'error': 404,
+    'message': 'The Resource Was Not Found'
+}
+
+```
+
+### Error Code : **405** 
+
+- Description : **METHOD NOT ALLOWED** , the requested method is known by the server but is not supported by the resource.
+
+``` 
+{
+    'success': False,
+    'error': 405,
+    'message': 'The Method is Not Allowed'
+}
+
+```
+### Error Code : **422** 
+
+- Description : **UNPROCESSABLE ENTITY** , the server can understand the request content type and syntax is correct but was unable to process the contained insturctions .
+
+``` 
+{
+    'success': False,
+    'error': 422,
+    'message': 'Unprocessable Entity'
+}
+
+```
+
+### Error Code : **500** 
+
+- Description : **INTERNAL SERVER ERROR ** , the server encountred an unexpected condition which prevented it from completing the request (generic / catch-all error type) .
+
+``` 
+{
+    'success': False,
+    'error': 500,
+    'message': 'Internal Server Error'
+}
+
+```
 
 ## Testing
 
