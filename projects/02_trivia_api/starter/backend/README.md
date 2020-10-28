@@ -93,7 +93,7 @@ DELETE 'questions/<int:question_id>'
 
 - Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
 
-**Categories Attributes**
+* **Categories Attributes**
 ..* id
 ..* type
 
@@ -116,7 +116,7 @@ curl http://127.0.0.1:5000/categories
 
 - Fetches a dictionary of **10 questions**  per **page** in which the keys are the ids.
 
-**Questions Attributes**
+* **Questions Attributes**
 ..* id 
 ..* question 
 ..* answer 
