@@ -93,9 +93,9 @@ DELETE 'questions/<int:question_id>'
 
 - Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
 
-* **Categories Attributes**
-..* id
-..* type
+* **Categories Attributes** 
+    - id
+    - type
 
 - Request Arguments: None
 - Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs.
@@ -117,11 +117,11 @@ curl http://127.0.0.1:5000/categories
 - Fetches a dictionary of **10 questions**  per **page** in which the keys are the ids.
 
 * **Questions Attributes**
-..* id 
-..* question 
-..* answer 
-..* category 
-..* difficulty
+    - id 
+    - question 
+    - answer 
+    - category 
+    - difficulty
 
 - Request Arguments: '?page=' (by default page 1 is returnd)
 - Catgories list as key:value is returned befor the questions dictonary.
