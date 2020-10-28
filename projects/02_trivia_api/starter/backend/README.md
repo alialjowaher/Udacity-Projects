@@ -68,29 +68,39 @@ One note before you delve into your tasks: for each endpoint you are expected to
 8. Create a POST endpoint to get questions to play the quiz. This endpoint should take category and previous question parameters and return a random questions within the given category, if provided, and that is not one of the previous questions.
 9. Create error handlers for all expected errors including 400, 404, 422 and 500.
 
+
+# API 
+
 ## Endpoints
 
 ```
 
 List of Endpoints:
 
-GET **'/categories'**
-GET **'/questions'**
-GET **'/categories/<int:id>/questions'**
+GET '/categories'
+GET '/questions'
+GET '/categories/<int:id>/questions'
 
-POST **'/questions/add'**
-POST **'/questions/search'**
+POST **'/questions/add'
+POST **'/questions/search'
 POST **'/quizzes'**
 
-DELETE **'questions/<int:question_id>'**
+DELETE 'questions/<int:question_id>'
+
 ```
 
-### GET '/categories'
+### GET **'/categories'**
 
 - Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
+
+**Categories Attributes**
+* id
+* type
+
 - Request Arguments: None
 - Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs.
 
+curl http://127.0.0.1:5000/categories
 ```
 {'1' : "Science",
 '2' : "Art",
@@ -98,6 +108,52 @@ DELETE **'questions/<int:question_id>'**
 '4' : "History",
 '5' : "Entertainment",
 '6' : "Sports"}
+
+```
+
+
+### GET **'/questions'**
+
+- Fetches a dictionary of **10 questions**  per **page** in which the keys are the ids.
+
+**Questions Attributes**
+* id 
+* question 
+* answer 
+* category 
+* difficulty
+
+- Request Arguments: '?page=' (by default page 1 is returnd)
+- Catgories list as key:value is returned befor the questions dictonary.
+- **Total Questions** and **success** variables are returned after the questions dictonary.
+- Returns: A  dictionary of objects with a  key, questions, answer, category , difficulty as key:value pairs.
+
+curl http://127.0.0.1:5000/questions
+
+**Response** 
+
+```
+{
+  "categories": {
+    "1": "science",
+    ... Omitted for bravery
+  },
+  "questions": [
+    {
+      "answer": "Apollo 13",
+      "category": 5,
+      "difficulty": 4,
+      "id": 2,
+      "question": "What movie earned Tom Hanks his third straight Oscar nomination, in 1996?"
+    },
+   ... Omitted for bravery
+  ],
+  "success": true,
+  "total_questions": 19
+}
+
+
+
 
 ```
 

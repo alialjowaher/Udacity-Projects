@@ -90,7 +90,8 @@ def create_app(test_config=None):
             all_categories = Category.query.order_by(Category.id).all()
             categories = {}
             for category in all_categories:
-                # categories.append(category.type.lower())
+                
+                # catgories need to be lower case due to icons from frontend being lower case
                 categories[category.id] = category.type.lower()
 
             return jsonify({
@@ -252,8 +253,8 @@ def create_app(test_config=None):
                 question for question in all_questions if question.id not
                 in previous_questions]
             '''
-             if the current category reaches 0 questions , add extra random 
-             questions from other categories 
+             if the current has less than 5 questions in it add more random 
+             questions from other categories up to a total of 5  
             '''
             if (len(category_used_questions) == 0):
                 random_questions = random.choice(all_categoryies)
