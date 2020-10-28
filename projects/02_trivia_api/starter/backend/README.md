@@ -104,12 +104,14 @@ curl http://127.0.0.1:5000/categories
 
 **Response:** 
 ```
-{'1' : "Science",
-'2' : "Art",
-'3' : "Geography",
-'4' : "History",
-'5' : "Entertainment",
-'6' : "Sports"}
+{
+    '1' : "Science",
+    '2' : "Art",
+    '3' : "Geography",
+    '4' : "History",
+    '5' : "Entertainment",
+    '6' : "Sports"
+}
 
 ```
 
@@ -189,7 +191,7 @@ curl http://127.0.0.1:5000/categories/<int:id>/questions
   ],
   "success": true,
   "total_questions": 3
-
+}
 ```
 
 ### POST **'/questions/add'**
@@ -259,7 +261,7 @@ curl -X POST http://127.0.0.1:5000/questions/search>
 **Response:** 
 ```
 {
-    'success': True,
+   'success': True,
    'questions': current_questions,
    'total_questions': len(search_questions),
 }
