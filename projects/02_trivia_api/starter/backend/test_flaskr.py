@@ -1,7 +1,9 @@
 import os
 import unittest
 import json
+from flask.globals import request
 from flask_sqlalchemy import SQLAlchemy
+
 
 from flaskr import create_app
 from models import setup_db, Question, Category
@@ -51,12 +53,80 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data['total_questions'])
         self.assertTrue(data['categories'])
 
-    def test_404_requesting_beyond_valid_page(self):
+    def test_404_get_paginated_question_beyond_valid_page(self):
         res = self.client().get('/questions?page=1000')
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 404)
         self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'The Resource Was Not Found')
+
+    def test_get_questions_based_on_category(self):
+        category_id = '1'
+        category_type = 'Science'
+        res = self.client().get('/categories/'+ category_id +'/questions')
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(data['success'], True)
+        self.assertTrue(data['questions'])
+        self.assertTrue(data['total_questions'])
+        self.assertTrue(data['current_category'], category_type)
+
+    def test_422_get_questions_based_on_category_does_not_exist(self):
+        fake_id = '200'
+        res = self.client().get('/categories/'+ fake_id +'/questions')
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 422)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'Unprocessable Entity')
+        
+    def test_create_question(self):
+        res = self.client().post('/questions/add',json={'question':'test question',
+                                                        'answer':'test answer',
+                                                        'category':'1','difficulty':'1'})
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(data['message'], 'The Question has been added Successfully !')
+    
+    def test_422_create_question_failed(self):
+        res = self.client().post('/questions/add',json={'question':'',
+                                                        'answer':'',
+                                                        'category':'1','difficulty':'1'})
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 422)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'Unprocessable Entity')
+
+    def test_delete_question(self):
+        question_id = '32'
+        res = self.client().delete('questions/'+question_id)
+        data = json.loads(res.data)
+        self.assertEqual(data['success'], True)        
+        self.assertEqual(data['question_id'], int(question_id))     
+    
+    def test_404_delete_question_failed(self):
+        question_id = '30000'
+        res = self.client().delete('questions/'+question_id)
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data['success'], False) 
+        self.assertEqual(data['message'], 'The Resource Was Not Found')    
+
+    def test_quizzes_game(self):
+        res = self.client().post('/quizzes',json={'previous_questions': [],
+                                                   'quiz_category': 
+                                                       {'type': 'sports', 'id': '6'}})
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)         
+    
+    def test_400_quizzes_game_failed(self):
+        res = self.client().post('/quizzes',json={})
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 400)
+        self.assertEqual(data['success'], False)         
+        self.assertEqual(data['message'], 'A Bad Request')
+
 
 # Make the tests conveniently executable
 
