@@ -20,7 +20,7 @@ db_drop_and_create_all()
 
 # ROUTES
 '''
-@TODO implement endpoint
+@Done implement endpoint
     GET /drinks
         it should be a public endpoint
         it should contain only the drink.short() data representation
@@ -32,12 +32,12 @@ db_drop_and_create_all()
 @app.route('/drinks', methods=['GET'])
 def get_drinks():
     try:
-        drinks = Drink.query.all()
-        drinks_short = [drink.short() for drink in drinks]
+        all_drinks = Drink.query.all()
+        drinks = [drink.short() for drink in all_drinks]
 
         return jsonify({
             'success': True,
-            'drinks': drinks_short
+            'drinks': drinks
         }), 200
 
     except Exception:
@@ -45,13 +45,32 @@ def get_drinks():
 
 
 '''
-@TODO implement endpoint
+@Done implement endpoint
     GET /drinks-detail
         it should require the 'get:drinks-detail' permission
         it should contain the drink.long() data representation
     returns status code 200 and json {"success": True, "drinks": drinks} where drinks is the list of drinks
         or appropriate status code indicating reason for failure
 '''
+
+
+@app.route('/drinks-detail', methods=['GET'])
+@requires_auth('get:drink-detail')
+def get_drink_detail(payload):
+    try:
+        all_drinks = Drink.query.all()
+        drinks = [drink.long() for drink in all_drinks]
+
+        if not all_drinks:
+            abort(400)
+
+        return jsonify({
+            'success': True,
+            'drinks': drinks
+        }), 200
+
+    except Exception:
+        abort(404)
 
 
 '''
@@ -63,6 +82,28 @@ def get_drinks():
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the newly created drink
         or appropriate status code indicating reason for failure
 '''
+
+
+@app.route('/drinks', methods=['POST'])
+@requires_auth('post:drinks')
+def create_drink(payload):
+    details = request.get_json()
+
+    try:
+        title = details.get('title')
+        recipe = details.get('recipe')
+        new_drink = Drink(
+            title=title,
+            recipe=recipe
+        )
+        new_drink.insert()
+
+        return jsonify({
+            "success": True,
+            "drinks": [new_drink.long()]
+        }), 200
+    except Exception:
+        abort(422)
 
 
 '''
@@ -78,6 +119,33 @@ def get_drinks():
 '''
 
 
+@app.route('/drinks/<int:id>', methods=['PATCH'])
+@requires_auth('patch:drinks')
+def update_drink(payload, id):
+    drink = Drink.query.filter(Drink.id == id)
+
+    if drink is None:
+        return jsonify({
+            "success": False,
+            "message": "Drink not found."
+        }), 404
+
+    details = request.get_json()
+    title = details.get('title')
+    recipe = details.get('recipe')
+
+    try:
+        drink.update()
+
+    except Exception:
+        abort(422)
+
+    return jsonify({
+        'Success': True,
+        'drinks': [drink.long()]
+    }), 200
+
+
 '''
 @TODO implement endpoint
     DELETE /drinks/<id>
@@ -88,6 +156,29 @@ def get_drinks():
     returns status code 200 and json {"success": True, "delete": id} where id is the id of the deleted record
         or appropriate status code indicating reason for failure
 '''
+
+
+@app.route('/drinks/<int:id', methods=['DELETE'])
+@requires_auth('delete:drinks')
+def delete_drink(payload, id):
+    drink = Drink.query.get(id)
+
+    if drink is None:
+        return jsonify({
+            'success': False,
+            'message': 'Drink not found'
+        }), 404
+
+    try:
+        drink.delete()
+
+    except Exception:
+        abort(422)
+
+    return jsonify({
+        'success': True,
+        'delete': id
+    }), 200
 
 
 # Error Handling
