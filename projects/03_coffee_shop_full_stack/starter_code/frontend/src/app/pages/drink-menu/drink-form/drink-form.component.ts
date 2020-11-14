@@ -16,7 +16,7 @@ export class DrinkFormComponent implements OnInit {
     public auth: AuthService,
     private modalCtrl: ModalController,
     private drinkService: DrinksService
-    ) { }
+  ) { }
 
   ngOnInit() {
     if (this.isNew) {
@@ -34,7 +34,7 @@ export class DrinkFormComponent implements OnInit {
   }
 
   addIngredient(i: number = 0) {
-    this.drink.recipe.splice(i + 1, 0, {name: '', color: 'white', parts: 1});
+    this.drink.recipe.splice(i + 1, 0, { name: '', color: 'white', parts: 1 });
   }
 
   removeIngredient(i: number) {

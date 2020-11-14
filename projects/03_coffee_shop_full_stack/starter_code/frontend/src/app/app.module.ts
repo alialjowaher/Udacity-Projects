@@ -16,6 +16,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { from } from 'rxjs';
 
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -23,8 +24,10 @@ import { from } from 'rxjs';
     BrowserModule,
     IonicModule.forRoot(),
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+
   ],
+
   providers: [
     StatusBar,
     SplashScreen,
@@ -32,6 +35,7 @@ import { from } from 'rxjs';
     DrinksService,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+
 })
-export class AppModule {}
+export class AppModule { }
