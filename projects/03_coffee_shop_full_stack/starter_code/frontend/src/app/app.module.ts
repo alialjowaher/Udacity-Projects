@@ -25,7 +25,6 @@ import { from } from 'rxjs';
     IonicModule.forRoot(),
     HttpClientModule,
     AppRoutingModule,
-
   ],
 
   providers: [
