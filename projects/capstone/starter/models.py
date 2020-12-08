@@ -1,11 +1,13 @@
-import os
-from sqlalchemy import Column, String, Integer, create_engine, sql
+import os , datetime
+from sqlalchemy import Column, String, Integer, DateTime, create_engine
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 import json
+from sqlalchemy.orm import backref
 
-database_name = "stories"
+database_name = "tellatale"
 database_path = "postgres://{}/{}".format(
-    'postgres:postgres@localhost:5432', database_name)
+    'postgres:alinet20@localhost:5432', database_name)
 
 db = SQLAlchemy()
 
@@ -19,23 +21,91 @@ def setup_db(app, database_path=database_path):
 
 
 class Story(db.Model):
-
+    __tablename__ = "stories"
     id = db.Column(db.Integer(), primary_key=True)
     title = db.Column(db.String(120), nullable=False)
-    cover = db.Column(db.String())
-    genres = db.Column(db.ARRAY(db.String()), nullable=False)
+    cover_image = db.Column(db.String())
+    genre = db.Column(db.String(), nullable=False)
     content = db.Column(db.Text())
     release_status = db.Column(db.Boolean, default=False)
     release_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
     read_time = db.Column(db.Integer())
+    Author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    # def __init__(self, title, cover_image, genre, content, release_status, release_date, read_time):
+    #     self.title = title
+    #     self.cover_image = cover_image
+    #     self.genre = genre
+    #     self.content = content
+    #     self.release_status = release_status
+    #     self.release_date = release_date
+    #     self.read_time = read_time
 
 
-# CRUD operations abstract
-class User(db.Model):
+    def cover(self):
+        return {
+            'title': self.title,
+            'cover_art': self.cover_image,
+            'read-time': self.read_time
+        }
     
-    name = db.Column(db.String(120), nullable=False)
-    type = db.Column(db.String(), nullable=False)
-    email = db.Column(db.String(), nullable=False)
+    def details(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'cover_image': self.cover_image,
+            'genre': self.genre,
+            'content': self.content,
+            'release-date': self.release_date,
+            'released': self.release_status,
+            'read-time': self.read_time
+        }
+
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+    
+    def update(self):
+        db.session.commit()
 
 
-#TODO complete classes & endpoints 
+class User(db.Model):
+    __tablename__ = "users"
+    id = db.Column(db.Integer(), primary_key=True)
+    role = db.Column(db.String(), nullable=False) #roels : reader , Author , Admin
+    #TODO should we delete all stories owned by User when his account is deleted?!
+    stories = db.relationship('Story', backref='users',lazy=True)
+
+    def userInfo(self):
+        return{
+            'role':self.role,
+            'stories':self.stories
+        }
+
+
+class Genre(db.Model):
+    __tablename__ = 'genres'
+
+    id = Column(Integer, primary_key=True)
+    type = Column(String)
+
+    def __init__(self, type):
+        self.type = type
+
+    def format(self):
+        return {
+            'id': self.id,
+            'type': self.type
+        }
+
+# class Reactions(db.Model):
+#     id = db.Column(db.Integer(), primary_key=True)
+#     story_id = db.Column(db.Integer, db.ForeignKey("story.id"), nullable=False)
+#     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+#     emoji_text = db.Column(db.ARRAY(db.String()), nullable=False)
+
+

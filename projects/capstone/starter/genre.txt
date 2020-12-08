@@ -1,0 +1,144 @@
+Fantasy
+Fantasy-Alternate History
+Fantasy-Children's Story
+Fantasy-Comedy
+Fantasy-Contemporary
+Fantasy-Dark Fantasy
+Fantasy-Fairy Tale
+Fantasy-Fantasy of Manners
+Fantasy-Heroic
+Fantasy-High Fantasy
+Fantasy-Historical
+Fantasy-Low Fantasy
+Fantasy-Magical Realism
+Fantasy-Mythic
+Fantasy-Superhero
+Fantasy-Sword and Sorcery
+Fantasy-Urban
+Fantasy-Young Adult
+Horror
+Horror-Body Horror
+Horror-Comedy
+Horror-Creepy Kids
+Horror-Extreme Horror
+Horror-Gothic
+Horror-Hauntings
+Horror-Historical
+Horror-Lovecraftian
+Horror-Man-Made
+Horror-Monsters
+Horror-Mythic
+Horror-Occult
+Horror-Psychic Abilities
+Horror-Psychological
+Horror-Quiet Horror
+Horror-Young Adult
+Mystery
+Mystery-Amateur Sleuth
+Mystery-Bumbling Detective
+Mystery-Caper
+Mystery-Child in Peril
+Mystery-Children's Story
+Mystery-Cozy
+Mystery-Culinary
+Mystery-Doctor Detective
+Mystery-Furry Sleuth
+Mystery-Handicapped
+Mystery-Hard-boiled
+Mystery-Historical
+Mystery-Howdunit
+Mystery-Legal
+Mystery-Locked Room
+Mystery-Paranormal
+Mystery-Police Procedural
+Mystery-Private Detective
+Mystery-Third World
+Mystery-Whodunit
+Mystery-Woman in Peril
+Mystery-Young Adult
+Romance
+Romance-Billionaires
+Romance-Comedy
+Romance-Contemporary
+Romance-Fantasy Romance
+Romance-Gothic
+Romance-Historical
+Romance-Holidays
+Romance-Inspirational
+Romance-Military
+Romance-Paranormal
+Romance-Regency
+Romance-Romantic Suspense
+Romance-Science Fiction Romance
+Romance-Sports
+Romance-Time Travel
+Romance-Western Romance
+Romance-Young Adult
+Science Fiction
+Science Fiction-Aliens
+Science Fiction-Alternate History
+Science Fiction-Alternate/Parallel Universe
+Science Fiction-Apocalyptic/Post-Apocalyptic
+Science Fiction-Biopunk
+Science Fiction-Children's Story
+Science Fiction-Colonization
+Science Fiction-Comedy
+Science Fiction-Cyberpunk
+Science Fiction-Dying Earth
+Science Fiction-Dystopia
+Science Fiction-Galactic Empire
+Science Fiction-Generation Ship
+Science Fiction-Hard Science Fiction
+Science Fiction-Immortality
+Science Fiction-Lost Worlds
+Science Fiction-Military
+Science Fiction-Mind Transfer
+Science Fiction-Mundane Science Fiction
+Science Fiction-Mythic
+Science Fiction-Nanopunk
+Science Fiction-Robots/A.I.
+Science Fiction-Science Fantasy
+Science Fiction-Science Horror
+Science Fiction-Slipstream
+Science Fiction-Soft Science Fiction
+Science Fiction-Space Exploration
+Science Fiction-Space Opera
+Science Fiction-SpyFi
+Science Fiction-Steampunk
+Science Fiction-Time Travel
+Science Fiction-Utopia
+Science Fiction-Young Adult
+Thriller and Suspense
+Thriller and Suspense-Action
+Thriller and Suspense-Comedy
+Thriller and Suspense-Conspiracy
+Thriller and Suspense-Crime
+Thriller and Suspense-Disaster
+Thriller and Suspense-Espionage
+Thriller and Suspense-Forensic
+Thriller and Suspense-Historical
+Thriller and Suspense-Legal
+Thriller and Suspense-Medical
+Thriller and Suspense-Military
+Thriller and Suspense-Mystery Thriller
+Thriller and Suspense-Paranormal
+Thriller and Suspense-Political
+Thriller and Suspense-Psychological
+Thriller and Suspense-Religious
+Thriller and Suspense-Technothriller
+Thriller and Suspense-Young Adult
+Western
+Western-Bounty Hunters
+Western-Cattle Drive
+Western-Children's Story
+Western-Comedy
+Western-Gold Rush
+Western-Gunfighters
+Western-Land Rush
+Western-Lawmen
+Western-Mountain Men
+Western-Outlaws
+Western-Prairie Settlement
+Western-Revenge
+Western-Wagon Train
+Western-Young Adult
