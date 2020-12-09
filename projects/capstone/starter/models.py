@@ -25,7 +25,7 @@ class Story(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     title = db.Column(db.String(120), nullable=False)
     cover_image = db.Column(db.String())
-    genre = db.Column(db.String(), nullable=False)
+    genre = db.Column(db.Integer(), nullable=False)
     content = db.Column(db.Text())
     release_status = db.Column(db.Boolean, default=False)
     release_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
@@ -101,7 +101,17 @@ class Genre(db.Model):
             'id': self.id,
             'type': self.type
         }
-
+        
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+    
+    def update(self):
+        db.session.commit()
 # class Reactions(db.Model):
 #     id = db.Column(db.Integer(), primary_key=True)
 #     story_id = db.Column(db.Integer, db.ForeignKey("story.id"), nullable=False)
