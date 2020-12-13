@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from sqlalchemy.util.langhelpers import generic_repr
 from models import Genre, Story , User, setup_db 
-from .auth import AuthError, requires_auth
+from auth import AuthError, requires_auth
 
 
 def create_app(test_config=None):
@@ -216,13 +216,21 @@ def create_app(test_config=None):
   @requires_auth('create:genre')
   def create_genre(payload):
       data = request.get_json()
-      genre = data.get('type')
+      type = data.get('type')
 
-      if not genre:
+      if not type:
         abort(422)
-      
+
+      # prevent duplicate genres       
+      exist = Genre.query.filter_by(type=type)
+      if exist:
+        return jsonify({
+          'success': False,
+          'message':'Genre already exists'
+        })
+
       try:
-        new_genre = Genre(type=genre)
+        new_genre = Genre(type=type)
         new_genre.insert()
         
         return jsonify({
