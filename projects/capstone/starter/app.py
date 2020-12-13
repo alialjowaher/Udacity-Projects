@@ -246,10 +246,9 @@ def create_app(test_config=None):
 
   #Done Delete a genre
   @app.route('/genres/delete/<int:genre_id>', methods=['DELETE'])
-  # @requires_auth('delete:genre')
-  # def delete_genre(payload, genre_id):
-  def delete_genre(genre_id):
-    
+  @requires_auth('delete:genre')
+  def delete_genre(payload, genre_id):
+  
     genre = Genre.query.get(genre_id)
     if genre is None:
       abort(404)
@@ -259,7 +258,7 @@ def create_app(test_config=None):
 
       return jsonify({
         'success': True,
-        'story_id': genre
+        'message': 'Deleted'
       })
     
     except Exception:
