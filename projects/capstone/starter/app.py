@@ -213,8 +213,9 @@ def create_app(test_config=None):
 
   #Done add new genre
   @app.route('/genres/add', methods=['POST'])
-  @requires_auth('create:genre')
-  def create_genre(payload):
+  # @requires_auth('create:genre')
+  # def create_genre(payload):
+  def create_genre():
       data = request.get_json()
       type = data.get('type')
 
@@ -222,8 +223,9 @@ def create_app(test_config=None):
         abort(422)
 
       # prevent duplicate genres       
-      exist = Genre.query.filter_by(type=type)
-      if exist:
+      exists = Genre.query.filter_by(type=type).all()
+    
+      if exists :
         return jsonify({
           'success': False,
           'message':'Genre already exists'
@@ -244,8 +246,10 @@ def create_app(test_config=None):
 
   #Done Delete a genre
   @app.route('/genres/delete/<int:genre_id>', methods=['DELETE'])
-  @requires_auth('delete:genre')
-  def delete_genre(payload, genre_id):
+  # @requires_auth('delete:genre')
+  # def delete_genre(payload, genre_id):
+  def delete_genre(genre_id):
+    
     genre = Genre.query.get(genre_id)
     if genre is None:
       abort(404)
