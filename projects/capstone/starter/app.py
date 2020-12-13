@@ -3,9 +3,12 @@ import os
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from sqlalchemy.log import Identified
 from sqlalchemy.util.langhelpers import generic_repr
 from models import Genre, Story , User, setup_db 
 from auth import AuthError, requires_auth
+
+
 
 
 def create_app(test_config=None):
@@ -59,6 +62,14 @@ def create_app(test_config=None):
   def create_story(payload):
     data = request.get_json()
     
+    # get user sub from JWT token 
+    # https://stackoverflow.com/questions/3368969/find-string-between-two-substrings
+    sub = json.dumps(payload['sub'])
+    start = '|'
+    end = '"'
+    found = (sub.split(start)[1].split(end)[0])
+    print(found)
+    
     title = data.get('title')
     cover_image= data.get('cover_image')
     genre = data.get('genre')
@@ -66,13 +77,13 @@ def create_app(test_config=None):
     release_date = data.get('release_date')
     release_status = data.get('released')
     read_time = data.get('read_time')
-
+    author_id = found
     if not title or not content or not genre or not release_date or not release_status:
        abort(422)
     
     try:
       new_story = Story(title=title,cover_image=cover_image,genre=genre,content=content,release_date=release_date,
-                        release_status=release_status,read_time=read_time)
+                        release_status=release_status,read_time=read_time,Author_id=author_id)
       new_story.insert()
       
       return jsonify({
@@ -213,9 +224,8 @@ def create_app(test_config=None):
 
   #Done add new genre
   @app.route('/genres/add', methods=['POST'])
-  # @requires_auth('create:genre')
-  # def create_genre(payload):
-  def create_genre():
+  @requires_auth('create:genre')
+  def create_genre(payload):
       data = request.get_json()
       type = data.get('type')
 
@@ -248,7 +258,6 @@ def create_app(test_config=None):
   @app.route('/genres/delete/<int:genre_id>', methods=['DELETE'])
   @requires_auth('delete:genre')
   def delete_genre(payload, genre_id):
-  
     genre = Genre.query.get(genre_id)
     if genre is None:
       abort(404)
@@ -328,7 +337,7 @@ def create_app(test_config=None):
       return jsonify({
           "success": False,
           "error": 422,
-          "message": "Request Unprocessable"
+          "message": "Unprocessable Entity"
       }), 422
 
 

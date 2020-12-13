@@ -32,15 +32,6 @@ class Story(db.Model):
     read_time = db.Column(db.Integer())
     Author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    # def __init__(self, title, cover_image, genre, content, release_status, release_date, read_time):
-    #     self.title = title
-    #     self.cover_image = cover_image
-    #     self.genre = genre
-    #     self.content = content
-    #     self.release_status = release_status
-    #     self.release_date = release_date
-    #     self.read_time = read_time
-
 
     def cover(self):
         return {
@@ -56,9 +47,10 @@ class Story(db.Model):
             'cover_image': self.cover_image,
             'genre': self.genre,
             'content': self.content,
-            'release-date': self.release_date,
+            'release_date': self.release_date,
             'released': self.release_status,
-            'read-time': self.read_time
+            'read_time': self.read_time,
+            
         }
 
     def insert(self):
