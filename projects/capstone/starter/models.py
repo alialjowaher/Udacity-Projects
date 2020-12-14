@@ -31,7 +31,7 @@ class Story(db.Model):
     release_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
     read_time = db.Column(db.Integer())
     Author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-
+    
 
     def cover(self):
         return {
@@ -68,7 +68,7 @@ class Story(db.Model):
 class User(db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer(), primary_key=True)
-    role = db.Column(db.String(), nullable=False) #roels : reader , Author , Admin
+    role = db.Column(db.String(), nullable=False) #roels : Author , Admin
     #TODO should we delete all stories owned by User when his account is deleted?!
     stories = db.relationship('Story', backref='users',lazy=True)
 

@@ -46,8 +46,15 @@ def create_app(test_config=None):
     all_stories = Story.query.filter_by(release_status='true').all()
     current_stories = pagination(request,all_stories)     
     
+    # append story-type to story 
+    for story in current_stories:
+      get_genre=Genre.query.get(story['genre'])
+      story['genre-name'] = get_genre.type
+
     if len(current_stories) == 0:
       abort(404)
+
+
 
     return jsonify({
       'success': True,
@@ -64,12 +71,12 @@ def create_app(test_config=None):
     
     # get user sub from JWT token 
     # https://stackoverflow.com/questions/3368969/find-string-between-two-substrings
-    sub = json.dumps(payload['sub'])
-    start = '|'
-    end = '"'
-    found = (sub.split(start)[1].split(end)[0])
-    print(found)
-    
+    # sub = json.dumps(payload['sub'])
+    # start = '|'
+    # end = '"'
+    # found = (sub.split(start)[1].split(end)[0])
+    # print(found)
+
     title = data.get('title')
     cover_image= data.get('cover_image')
     genre = data.get('genre')
@@ -77,19 +84,19 @@ def create_app(test_config=None):
     release_date = data.get('release_date')
     release_status = data.get('released')
     read_time = data.get('read_time')
-    author_id = found
+   
     if not title or not content or not genre or not release_date or not release_status:
        abort(422)
     
     try:
       new_story = Story(title=title,cover_image=cover_image,genre=genre,content=content,release_date=release_date,
-                        release_status=release_status,read_time=read_time,Author_id=author_id)
+                        release_status=release_status,read_time=read_time)
       new_story.insert()
       
       return jsonify({
         'success': True,
         'message':'Your story has been Created'
-        # 'story_id':
+        
       }),201
 
     except Exception:
@@ -101,11 +108,15 @@ def create_app(test_config=None):
   def get_story(story_id):
     
     story = Story.query.get(story_id)
-
+    # get genre type
+    genre = Genre.query.get(story.genre)
+    
     if story is None:
       abort(404)
-
+    
     story = story.details()
+    
+    story["genre-name"] = genre.type
 
     return jsonify({
       'success': True,
@@ -121,7 +132,7 @@ def create_app(test_config=None):
   @requires_auth('delete:story')
   def delete_story(payload, story_id):
     story = Story.query.get(story_id)
-    if story is None:
+    if story == 0 :
       abort(404)
     
     try:
@@ -130,7 +141,7 @@ def create_app(test_config=None):
       return jsonify({
         'success': True,
         'story_id': story_id
-      })
+      }),200
     
     except Exception:
       abort(422)
@@ -311,17 +322,11 @@ def create_app(test_config=None):
     if(genre is None):
       abort(422)
   
-    # filtred_genre = Genre.query.filter_by(id=id).all()
     stories = Story.query.filter_by(genre=id).all()
     stories_in_genre = pagination(request, stories)
     
     if len(stories) == 0:
-      return jsonify({
-      'success':True,
-      'total_stories':len(stories),
-      'current_genre': genre.type
-      }),200
-    
+      abort(404)
   
     return jsonify({
       'success':True,
