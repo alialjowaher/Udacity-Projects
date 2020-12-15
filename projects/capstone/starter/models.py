@@ -19,6 +19,11 @@ def setup_db(app, database_path=database_path):
     db.init_app(app)
     db.create_all()
 
+# run first time only
+def db_drop_and_create_all():
+    db.drop_all()
+    db.create_all()
+
 
 class Story(db.Model):
     __tablename__ = "stories"

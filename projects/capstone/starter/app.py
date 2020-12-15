@@ -20,7 +20,7 @@ def create_app(test_config=None):
   db = SQLAlchemy(app)
   migrate = Migrate(app, db)
   CORS(app)
-
+  
   @app.after_request
   def after_request(response):
         response.headers.add('Access-Control-Allow-Headers',
