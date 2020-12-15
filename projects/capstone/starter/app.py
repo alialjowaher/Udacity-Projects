@@ -208,11 +208,11 @@ def create_app(test_config=None):
                 
           
 
-            current_questions = pagination(request, search_stories)
+            current_stories = pagination(request, search_stories)
             return jsonify({
                 'success': True,
-                'questions': current_questions,
-                'total_questions': len(search_stories),
+                'stories': current_stories,
+                'total_stories': len(search_stories),
             })
         except Exception:
             abort(404)
@@ -354,6 +354,22 @@ def create_app(test_config=None):
           "error": 404,
           "message": "Resource Not Found"
       }), 404
+
+  @app.errorhandler(401)
+  def resource_not_found(error):
+      return jsonify({
+          "success": False,
+          "error": 401,
+          "message": "Unauthorized"
+      }), 401
+
+  @app.errorhandler(403)
+  def resource_not_found(error):
+      return jsonify({
+          "success": False,
+          "error": 403,
+          "message": "Access to the requested resource is forbidden"
+      }), 403
 
 
   @app.errorhandler(500)

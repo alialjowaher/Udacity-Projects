@@ -35,8 +35,8 @@ class Story(db.Model):
     release_status = db.Column(db.Boolean, default=False)
     release_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
     read_time = db.Column(db.Integer())
-    Author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    
+    # Author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    writen_by = db.Column(db.String(120), nullable=False)
 
     def cover(self):
         return {
@@ -69,19 +69,18 @@ class Story(db.Model):
     def update(self):
         db.session.commit()
 
-
-class User(db.Model):
-    __tablename__ = "users"
-    id = db.Column(db.Integer(), primary_key=True)
-    role = db.Column(db.String(), nullable=False) #roels : Author , Admin
-    #TODO should we delete all stories owned by User when his account is deleted?!
-    stories = db.relationship('Story', backref='users',lazy=True)
-
-    def userInfo(self):
-        return{
-            'role':self.role,
-            'stories':self.stories
-        }
+#TODO: Future Improvment 
+# class User(db.Model):
+#     __tablename__ = "users"
+#     id = db.Column(db.Integer(), primary_key=True)
+#     role = db.Column(db.String(), nullable=False) #roels : Author , Admin
+#     stories = db.relationship('Story', backref='users',lazy=True)
+# should we delete all stories owned by User when his account is deleted?!
+#     def userInfo(self):
+#         return{
+#             'role':self.role,
+#             'stories':self.stories
+#         }
 
 
 class Genre(db.Model):
@@ -109,10 +108,14 @@ class Genre(db.Model):
     
     def update(self):
         db.session.commit()
+
+
+
+
+#TODO: reader reactions model (think emoji/likes)
 # class Reactions(db.Model):
 #     id = db.Column(db.Integer(), primary_key=True)
 #     story_id = db.Column(db.Integer, db.ForeignKey("story.id"), nullable=False)
 #     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 #     emoji_text = db.Column(db.ARRAY(db.String()), nullable=False)
-
 
