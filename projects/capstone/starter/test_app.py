@@ -66,7 +66,7 @@ class TellaTaleTestCase(unittest.TestCase):
 
     # Create a new story [requires JWT] or remove comment out requires Auth in app.py
     def test_create_story_success(self):
-        res = self.client().post('/stories/add',headers={'Authorization': 'Bearer '+ WRITER_TOKEN},
+        res = self.client().post('/stories/add',headers={'Authorization': WRITER_TOKEN},
         json={'title':'test title','cover_image':'test image link',
         'genre':'1','content':'test content of a story',
         'release_date':'2020-12-08 04:05:06','released':True,'read-time':3 })
@@ -77,7 +77,7 @@ class TellaTaleTestCase(unittest.TestCase):
 
 
     def test_create_story_fail(self):
-        res = self.client().post('/stories/add',headers={'Authorization': 'Bearer '+ WRITER_TOKEN},
+        res = self.client().post('/stories/add',headers={'Authorization': WRITER_TOKEN},
         json={'title':'','cover_image':'test image link','genre':'1',
         'content':'test content of a story',
         'release_date':'2020-12-08 04:05:06','released':True,'read-time':0 })
@@ -87,7 +87,7 @@ class TellaTaleTestCase(unittest.TestCase):
         self.assertEqual(data['message'], 'Unprocessable Entity')
 
     def test_update_story_success(self):
-        res = self.client().patch('/stories/update/22',headers={'Authorization': 'Bearer '+ WRITER_TOKEN},
+        res = self.client().patch('/stories/update/22',headers={'Authorization': WRITER_TOKEN},
         json={'title':'updated title','cover_image':'test image link',
         'genre':'1','content':'test content of a story',
         'release_date':'2020-12-08 04:05:06','released':True,'read-time':3 })
@@ -96,7 +96,7 @@ class TellaTaleTestCase(unittest.TestCase):
         self.assertEqual(data['success'], True)
     
     def test_update_story_fail(self):
-        res = self.client().patch('/stories/update/40000',headers={'Authorization': 'Bearer '+ WRITER_TOKEN},
+        res = self.client().patch('/stories/update/40000',headers={'Authorization': WRITER_TOKEN},
         json={'title':'updated title'})
         data = json.loads(res.data)
         self.assertEqual(res.status_code,422)
@@ -104,14 +104,14 @@ class TellaTaleTestCase(unittest.TestCase):
     
 
     def test_delete_story(self):
-        res = self.client().delete('/stories/delete/36',headers={'Authorization': 'Bearer '+ WRITER_TOKEN})
+        res = self.client().delete('/stories/delete/22',headers={'Authorization': WRITER_TOKEN})
         data = json.loads(res.data)
         self.assertEqual(res.status_code,200)
         self.assertEqual(data['success'], True)
         self.assertEqual(data['story_id'], 36)
     
     def test_delete_story_fail(self):
-        res = self.client().delete('/stories/delete/40000',headers={'Authorization': 'Bearer '+ WRITER_TOKEN})
+        res = self.client().delete('/stories/delete/40000',headers={'Authorization': WRITER_TOKEN})
         data = json.loads(res.data)
         self.assertEqual(res.status_code,422)
         self.assertEqual(data['success'], False)
@@ -137,15 +137,15 @@ class TellaTaleTestCase(unittest.TestCase):
        self.assertTrue(data['current_genre'])
  
     def test_create_genre(self):
-      res = self.client().post('/genres/add',headers={'Authorization': 'Bearer '+ WRITER_TOKEN},
-        json={'type':'Fake'})
+      res = self.client().post('/genres/add',headers={'Authorization': ADMIN_TOKEN},
+        json={'type':'Fake21'})
       data = json.loads(res.data)
-      self.assertEqual(res.status_code, 201)
+      self.assertEqual(res.status_code, 200)
       self.assertEqual(data['success'], True)
       self.assertEqual(data['message'], 'New genre has been Created')
 
     def test_update_genre(self):
-      res = self.client().patch('/genres/update/1',headers={'Authorization': 'Bearer '+ WRITER_TOKEN},
+      res = self.client().patch('/genres/update/1',headers={'Authorization': ADMIN_TOKEN},
         json={'genre':'fantasy'})
       data = json.loads(res.data)
       self.assertEqual(res.status_code,200)
@@ -153,7 +153,7 @@ class TellaTaleTestCase(unittest.TestCase):
       self.assertEqual(data['genre'])
 
     def test_delete_genre(self):
-      res = self.client().delete('/genres/delete/145',headers={'Authorization': 'Bearer '+ WRITER_TOKEN})
+      res = self.client().delete('/genres/delete/150',headers={'Authorization': ADMIN_TOKEN})
       data = json.loads(res.data)
       self.assertEqual(res.status_code,422)
       self.assertEqual(data['success'], False)

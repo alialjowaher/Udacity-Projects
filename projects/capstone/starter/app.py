@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from sqlalchemy.log import Identified
 from sqlalchemy.util.langhelpers import generic_repr
-from models import Genre, Story , User, setup_db 
+from models import Genre, Story , setup_db 
 from auth import AuthError, requires_auth
 from flask_migrate import Migrate
 
@@ -77,7 +77,8 @@ def create_app(test_config=None):
     # start = '|'
     # end = '"'
     # found = (sub.split(start)[1].split(end)[0])
-    # print(found)
+    # sub = json.dumps(payload)
+    # print(sub)
 
     title = data.get('title')
     cover_image= data.get('cover_image')
@@ -223,10 +224,7 @@ def create_app(test_config=None):
   def get_genres():
     all_genres = Genre.query.all()
     genres = [genre.format() for genre in all_genres]
-    # genres = {}
-    # for genre in all_genres:
-    #   genres[genre.id] = genre.type
-
+    
     return jsonify({
       'success': True,
       'genres': genres,
@@ -260,7 +258,7 @@ def create_app(test_config=None):
         return jsonify({
           'success': True,
           'message':'New genre has been Created'
-        }),201
+        }),200
 
       except Exception:
         abort(422)

@@ -100,11 +100,11 @@ before running `source setup.sh` set the *bearer tokens* for both Writer & Admin
 ## AUTH0 Login Details:
 - To generate new Bearer Tokens
 * Writer
-    * Email:director@capstone.com 
-    * Password: Password1!
+    * Email:writer@fsnd-capstone.com 
+    * Password: Password@123
 * Admin
-    * Email:producer@capstone.com 
-    * Password: Password1!
+    * Email:admin@fsnd-capstone.com
+    * Password: Password@123
 
 
 <!-- ## [Postman](https://getpostman.com) Collections:

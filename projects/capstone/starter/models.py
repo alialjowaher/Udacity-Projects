@@ -36,7 +36,7 @@ class Story(db.Model):
     release_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
     read_time = db.Column(db.Integer())
     # Author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    writen_by = db.Column(db.String(120), nullable=False)
+    # writen_by = db.Column(db.String(120), nullable=False)
 
     def cover(self):
         return {
