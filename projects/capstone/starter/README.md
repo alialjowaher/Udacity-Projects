@@ -1,7 +1,7 @@
 Capstone: Casting Agency App
 ----
 ## Inspiration :rocket:
-This is my final project for the [Udacity Full Stack Web Developer Nanodegree](https://www.udacity.com/course/full-stack-web-developer-nanodegree--nd004). It covers the following technical topics in 1 app:
+My love for rading fantasy stories and Passion for Fullstack development has lead me to this moment as this is my final project for the [Udacity Full Stack Web Developer Nanodegree](https://www.udacity.com/course/full-stack-web-developer-nanodegree--nd004). It covers the following technical topics in 1 app:
 
 1. Database modeling with `postgres` & `sqlalchemy` (see `models.py`)
 2. API to performance CRUD Operations on database with `Flask` (see `app.py`)
