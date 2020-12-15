@@ -7,6 +7,7 @@ from sqlalchemy.log import Identified
 from sqlalchemy.util.langhelpers import generic_repr
 from models import Genre, Story , User, setup_db 
 from auth import AuthError, requires_auth
+from flask_migrate import Migrate
 
 
 
@@ -16,7 +17,8 @@ def create_app(test_config=None):
   app = Flask(__name__)
   
   setup_db(app)
-
+  db = SQLAlchemy(app)
+  migrate = Migrate(app, db)
   CORS(app)
 
   @app.after_request
@@ -48,8 +50,8 @@ def create_app(test_config=None):
     
     # append story-type to story 
     for story in current_stories:
-      get_genre=Genre.query.get(story['genre'])
-      story['genre-name'] = get_genre.type
+      get_genre_type=Genre.query.get(story['genre'])
+      story['genre-name'] = get_genre_type.type
 
     if len(current_stories) == 0:
       abort(404)
@@ -69,7 +71,7 @@ def create_app(test_config=None):
   def create_story(payload):
     data = request.get_json()
     
-    # get user sub from JWT token 
+    # TODO: get user sub from JWT token & allow only owner to edit post
     # https://stackoverflow.com/questions/3368969/find-string-between-two-substrings
     # sub = json.dumps(payload['sub'])
     # start = '|'
@@ -96,7 +98,6 @@ def create_app(test_config=None):
       return jsonify({
         'success': True,
         'message':'Your story has been Created'
-        
       }),201
 
     except Exception:
@@ -108,15 +109,15 @@ def create_app(test_config=None):
   def get_story(story_id):
     
     story = Story.query.get(story_id)
-    # get genre type
-    genre = Genre.query.get(story.genre)
+    # get genre type as name in story
+    genre_type = Genre.query.get(story.genre)
     
     if story is None:
       abort(404)
     
     story = story.details()
     
-    story["genre-name"] = genre.type
+    story["genre-name"] = genre_type.type
 
     return jsonify({
       'success': True,
