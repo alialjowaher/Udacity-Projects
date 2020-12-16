@@ -172,17 +172,17 @@ def create_app(test_config=None):
     # check if your the owner of the story to update it.
     get_email = json.dumps(payload['https://tellatale.com/email'])
     email = (get_email.split('"')[1].split('"')[0])
-    print(email)
     story_owner = User.query.get(story.author_id)
-    print (story_owner.email)
-        
+      
+    if story is None:
+        abort(404)
+    
     if story_owner.email != email:
          abort(401)
     
+    
     try:
 
-      if story is None:
-        abort(404)
 
       title = data.get('title')
       cover_image= data.get('cover_image')

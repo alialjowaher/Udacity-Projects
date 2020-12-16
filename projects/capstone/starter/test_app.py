@@ -138,7 +138,7 @@ class TellaTaleTestCase(unittest.TestCase):
  
     def test_create_genre(self):
       res = self.client().post('/genres/add',headers={'Authorization': ADMIN_TOKEN},
-        json={'type':'Fake21'})
+        json={'type':'Fake22'})
       data = json.loads(res.data)
       self.assertEqual(res.status_code, 200)
       self.assertEqual(data['success'], True)
@@ -153,10 +153,10 @@ class TellaTaleTestCase(unittest.TestCase):
       self.assertEqual(data['genre'],'fantasy')
 
     def test_delete_genre(self):
-      res = self.client().delete('/genres/delete/150',headers={'Authorization': ADMIN_TOKEN})
+      res = self.client().delete('/genres/delete/110',headers={'Authorization': ADMIN_TOKEN})
       data = json.loads(res.data)
-      self.assertEqual(res.status_code,422)
-      self.assertEqual(data['success'], False)
+      self.assertEqual(res.status_code,200)
+      self.assertEqual(data['success'], True)
 
 
 if __name__ == "__main__":
