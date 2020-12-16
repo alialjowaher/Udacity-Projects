@@ -19,10 +19,7 @@ def setup_db(app, database_path=database_path):
     db.init_app(app)
     db.create_all()
 
-# run first time only
-def db_drop_and_create_all():
-    db.drop_all()
-    db.create_all()
+
 
 
 class Story(db.Model):
@@ -34,10 +31,9 @@ class Story(db.Model):
     content = db.Column(db.Text())
     release_status = db.Column(db.Boolean, default=False)
     release_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    read_time = db.Column(db.Integer())
-    # Author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    # writen_by = db.Column(db.String(120), nullable=False)
-
+    read_time = db.Column(db.Integer()) # in minutes
+    author_id = db.Column(db.Integer(), db.ForeignKey('users.id'))
+   
     def cover(self):
         return {
             'title': self.title,
@@ -55,6 +51,7 @@ class Story(db.Model):
             'release_date': self.release_date,
             'released': self.release_status,
             'read_time': self.read_time,
+            'author_id': self.author_id
             
         }
 
@@ -69,18 +66,22 @@ class Story(db.Model):
     def update(self):
         db.session.commit()
 
-#TODO: Future Improvment 
-# class User(db.Model):
-#     __tablename__ = "users"
-#     id = db.Column(db.Integer(), primary_key=True)
-#     role = db.Column(db.String(), nullable=False) #roels : Author , Admin
-#     stories = db.relationship('Story', backref='users',lazy=True)
-# should we delete all stories owned by User when his account is deleted?!
-#     def userInfo(self):
-#         return{
-#             'role':self.role,
-#             'stories':self.stories
-#         }
+#TODO: User Class 
+class User(db.Model):
+    __tablename__ = "users"
+    id = db.Column(db.Integer(), primary_key=True)
+    email = db.Column(db.Text(), nullable=False)
+    name =  db.Column(db.String(120), nullable=False)
+    stories = db.relationship('Story', backref='users',lazy=True)
+    
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+
+    # def userName(self):
+    #     return{
+    #         'name':self.name
+    #     }
 
 
 class Genre(db.Model):
@@ -112,10 +113,17 @@ class Genre(db.Model):
 
 
 
-#TODO: reader reactions model (think emoji/likes)
+#TODO: Future Feature : reader reactions model (think emoji/likes)
 # class Reactions(db.Model):
 #     id = db.Column(db.Integer(), primary_key=True)
 #     story_id = db.Column(db.Integer, db.ForeignKey("story.id"), nullable=False)
 #     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 #     emoji_text = db.Column(db.ARRAY(db.String()), nullable=False)
 
+#TODO: Future Feature comments models 
+
+# class Comments(db.Model):
+#      id = db.Column(db.Integer(), primary_key=True)
+#      text = db.Column(db.String(), nullable=False)
+#      story_id = db.Column(db.Integer, db.ForeignKey("story.id"), nullable=False)
+#      user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)

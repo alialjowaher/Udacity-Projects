@@ -87,7 +87,7 @@ class TellaTaleTestCase(unittest.TestCase):
         self.assertEqual(data['message'], 'Unprocessable Entity')
 
     def test_update_story_success(self):
-        res = self.client().patch('/stories/update/22',headers={'Authorization': WRITER_TOKEN},
+        res = self.client().patch('/stories/update/7',headers={'Authorization': WRITER_TOKEN},
         json={'title':'updated title','cover_image':'test image link',
         'genre':'1','content':'test content of a story',
         'release_date':'2020-12-08 04:05:06','released':True,'read-time':3 })
@@ -104,11 +104,11 @@ class TellaTaleTestCase(unittest.TestCase):
     
 
     def test_delete_story(self):
-        res = self.client().delete('/stories/delete/22',headers={'Authorization': WRITER_TOKEN})
+        res = self.client().delete('/stories/delete/5',headers={'Authorization': WRITER_TOKEN})
         data = json.loads(res.data)
         self.assertEqual(res.status_code,200)
         self.assertEqual(data['success'], True)
-        self.assertEqual(data['story_id'], 36)
+        self.assertEqual(data['story_id'], 5)
     
     def test_delete_story_fail(self):
         res = self.client().delete('/stories/delete/40000',headers={'Authorization': WRITER_TOKEN})
@@ -150,7 +150,7 @@ class TellaTaleTestCase(unittest.TestCase):
       data = json.loads(res.data)
       self.assertEqual(res.status_code,200)
       self.assertEqual(data['success'], True)
-      self.assertEqual(data['genre'])
+      self.assertEqual(data['genre'],'fantasy')
 
     def test_delete_genre(self):
       res = self.client().delete('/genres/delete/150',headers={'Authorization': ADMIN_TOKEN})

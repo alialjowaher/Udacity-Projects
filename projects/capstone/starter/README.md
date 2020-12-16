@@ -61,8 +61,8 @@ pip3 install -r requirements.txt
 * The testing database should be named `tellatale_test`
 
 * With Postgres running, import the following tables into the database :
-** genre.txt
-** stoires.csv
+..* genre.txt
+..* stoires.csv
 
 ---
 **NOTE**
@@ -125,50 +125,58 @@ Getting Started
 ```
 {
  "stories": [
-     {
-      "content": "Was time created or a side effect !?", 
-      "cover_image": null, 
-      "genre": 1, 
-      "genre-name": "Fantasy", 
-      "id": 9, 
-      "read_time": 1, 
-      "release_date": "Wed, 23 Dec 2020 04:05:06 GMT", 
-      "released": true, 
-      "title": "The machine that made time"
-    }, 
     {
+      "author_id": 7, 
+      "author_name": "writer", 
       "content": "should the be ranked by chance or glance?", 
-      "cover_image": null, 
-      "genre": 1, 
-      "genre-name": "Fantasy", 
-      "id": 10, 
-      "read_time": 5, 
-      "release_date": "Wed, 23 Dec 2020 04:05:06 GMT", 
-      "released": true, 
-      "title": "the 5th Rank of wizard"
-    }, 
-    {
-      "content": "should the be ranked by chance or glance?", 
-      "cover_image": null, 
-      "genre": 3, 
-      "genre-name": "Fantasy-Children's Story", 
-      "id": 13, 
-      "read_time": 5, 
-      "release_date": "Wed, 23 Dec 2020 04:05:06 GMT", 
-      "released": true, 
-      "title": "the 6th Rank of wizard"
-    }, 
-    {
-      "content": "should the be ranked by chance or glance?", 
-      "cover_image": null, 
+      "cover_image": "https://unsplash.com/photos/HKKM537I_Ik", 
       "genre": 144, 
-      "genre-name": "Western-Young Adult", 
-      "id": 14, 
+      "genre_name": "Western-Young Adult", 
+      "id": 11, 
       "read_time": 5, 
       "release_date": "Wed, 23 Dec 2020 04:05:06 GMT", 
       "released": true, 
       "title": "the 6th Rank of wizard"
-    }
+    }, 
+    {
+      "author_id": 7, 
+      "author_name": "writer", 
+      "content": "should the be ranked by chance or glance?", 
+      "cover_image": "https://unsplash.com/photos/HKKM537I_Ik", 
+      "genre": 144, 
+      "genre_name": "Western-Young Adult", 
+      "id": 1, 
+      "read_time": 5, 
+      "release_date": "Wed, 23 Dec 2020 04:05:06 GMT", 
+      "released": true, 
+      "title": "the 6th Rank of wizard"
+    }, 
+    {
+      "author_id": 7, 
+      "author_name": "writer", 
+      "content": "should the be ranked by chance or glance?", 
+      "cover_image": "https://unsplash.com/photos/HKKM537I_Ik", 
+      "genre": 144, 
+      "genre_name": "Western-Young Adult", 
+      "id": 2, 
+      "read_time": 5, 
+      "release_date": "Wed, 23 Dec 2020 04:05:06 GMT", 
+      "released": true, 
+      "title": "the 6th Rank of wizard"
+    }, 
+    {
+      "author_id": 7, 
+      "author_name": "writer", 
+      "content": "should the be ranked by chance or glance?", 
+      "cover_image": "https://unsplash.com/photos/HKKM537I_Ik", 
+      "genre": 144, 
+      "genre_name": "Western-Young Adult", 
+      "id": 3, 
+      "read_time": 5, 
+      "release_date": "Wed, 23 Dec 2020 04:05:06 GMT", 
+      "released": true, 
+      "title": "the 6th Rank of wizard"
+    }, 
  ],
  "success": true, 
  "total_stories": 10
@@ -192,7 +200,9 @@ GET http://127.0.0.1:5000/stories/3
     "read_time": 3, 
     "release_date": "Tue, 08 Dec 2020 04:05:06 GMT", 
     "released": false, 
-    "title": "the next big thing"
+    "title": "the next big thing",
+    "author_id": 7, 
+    "author_name": "writer" 
   }, 
   "success": true
 }
@@ -234,7 +244,7 @@ curl http://127.0.0.1:5000/stories/update/3 -X PATCH
 ```
 
 #### POST /stories/add
-- Creates a new story with the title,cover art , content,read time, released status , release date, genre.  
+- Creates a new story with the title,cover art , content, read time(in minutes), released status , release date, genre.  
 
 ##### Input:
 ```
@@ -294,7 +304,9 @@ curl -X DELETE http://127.0.0.1:5000/stories/search
             "read_time": 5,
             "release_date": "Wed, 23 Dec 2020 04:05:06 GMT",
             "released": true,
-            "title": "the 6th Rank of wizard"
+            "title": "the 6th Rank of wizard",
+            "author_id": 7, 
+            "author_name": "writer" 
         }
     ],
     "success": true,
@@ -446,8 +458,8 @@ The API will return five error types when requests fail:
 - 403: Access to the requested resource is forbidden
 - 500: Internal Server Error
 - Authorization errors:
--- Invalid Claims.
--- Unauthorized.
--- Token expired.
--- Unable to parse authentication token.
--- Unable to find the appropriate key.
+--* Invalid Claims.
+--* Unauthorized.
+--* Token expired.
+--* Unable to parse authentication token.
+--* Unable to find the appropriate key.

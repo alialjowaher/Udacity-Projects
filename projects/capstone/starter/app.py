@@ -1,11 +1,12 @@
 import json
 import os
+from re import split
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from sqlalchemy.log import Identified
 from sqlalchemy.util.langhelpers import generic_repr
-from models import Genre, Story , setup_db 
+from models import Genre, Story, User , setup_db 
 from auth import AuthError, requires_auth
 from flask_migrate import Migrate
 
@@ -21,6 +22,7 @@ def create_app(test_config=None):
   migrate = Migrate(app, db)
   CORS(app)
   
+  STORY_PER_PAGE = 10
   @app.after_request
   def after_request(response):
         response.headers.add('Access-Control-Allow-Headers',
@@ -28,9 +30,6 @@ def create_app(test_config=None):
         response.headers.add('Access-Control-Allow-Methods',
                              'GET,PUT,POST,DELETE,OPTIONS')
         return response
-
-  STORY_PER_PAGE = 10
-
 
   #Done pagination helper
   def pagination(request, selection):
@@ -44,15 +43,17 @@ def create_app(test_config=None):
   #Done Get all stories
   @app.route('/stories', methods=['GET'])
   def get_stories():
-    # return released stories 
+    # return released stories
     all_stories = Story.query.filter_by(release_status='true').all()
     current_stories = pagination(request,all_stories)     
     
     # append story-type to story 
     for story in current_stories:
+      get_author_name = User.query.get(story['author_id'])
+      story['author_name'] = get_author_name.name
       get_genre_type=Genre.query.get(story['genre'])
-      story['genre-name'] = get_genre_type.type
-
+      story['genre_name'] = get_genre_type.type
+    
     if len(current_stories) == 0:
       abort(404)
 
@@ -71,14 +72,24 @@ def create_app(test_config=None):
   def create_story(payload):
     data = request.get_json()
     
-    # TODO: get user sub from JWT token & allow only owner to edit post
+    # DONE: get user e-mail from JWT token & allow only owner to edit post
     # https://stackoverflow.com/questions/3368969/find-string-between-two-substrings
-    # sub = json.dumps(payload['sub'])
-    # start = '|'
-    # end = '"'
-    # found = (sub.split(start)[1].split(end)[0])
-    # sub = json.dumps(payload)
-    # print(sub)
+    get_email = json.dumps(payload['https://tellatale.com/email'])
+    email = (get_email.split('"')[1].split('"')[0])
+    
+    # check if user exists or create new user
+    user_exists = User.query.filter_by(email=email).first()
+    temp_name = (email.split("@")[0])
+    author_id =user_exists.id
+    
+    if not user_exists:
+      try:
+        new_user = User(email=email,name=temp_name)
+        new_user.insert()
+        author_id = new_user.id
+      except Exception:
+          abort(422)
+    
 
     title = data.get('title')
     cover_image= data.get('cover_image')
@@ -91,9 +102,10 @@ def create_app(test_config=None):
     if not title or not content or not genre or not release_date or not release_status:
        abort(422)
     
+    
     try:
       new_story = Story(title=title,cover_image=cover_image,genre=genre,content=content,release_date=release_date,
-                        release_status=release_status,read_time=read_time)
+                        release_status=release_status,read_time=read_time,author_id=author_id)
       new_story.insert()
       
       return jsonify({
@@ -112,13 +124,14 @@ def create_app(test_config=None):
     story = Story.query.get(story_id)
     # get genre type as name in story
     genre_type = Genre.query.get(story.genre)
-    
+    get_author_name = User.query.get(story.author_id)
     if story is None:
       abort(404)
     
     story = story.details()
     
-    story["genre-name"] = genre_type.type
+    story["genre_name"] = genre_type.type
+    story['author_name'] = get_author_name.name
 
     return jsonify({
       'success': True,
@@ -139,7 +152,6 @@ def create_app(test_config=None):
     
     try:
       story.delete()
-
       return jsonify({
         'success': True,
         'story_id': story_id
@@ -155,13 +167,23 @@ def create_app(test_config=None):
   def update_story(payload, story_id):
 
     data = request.get_json()
-
+    story = Story.query.get(story_id)
+    
+    # check if your the owner of the story to update it.
+    get_email = json.dumps(payload['https://tellatale.com/email'])
+    email = (get_email.split('"')[1].split('"')[0])
+    print(email)
+    story_owner = User.query.get(story.author_id)
+    print (story_owner.email)
+        
+    if story_owner.email != email:
+         abort(401)
+    
     try:
-      story = Story.query.get(story_id)
 
       if story is None:
         abort(404)
-      
+
       title = data.get('title')
       cover_image= data.get('cover_image')
       genre = data.get('genre')
