@@ -98,7 +98,9 @@ before running `source setup.sh` set the *bearer tokens* for both Writer & Admin
 * Running locally: http://localhost:5000
 
 ## AUTH0 Login Details:
-- To generate new Bearer Tokens
+- To generate new Bearer Tokens use the following link [Auth0 authorization link](https://fsnd-alij.us.auth0.com/authorize?audience=tellatale&response_type=token&client_id=76wazjJ6PUkFBS4ok4p9lD7y9OkSYIYC&redirect_uri=https://127.0.0.1:5000/user-profile&scope=openid%20profile%20email)
+
+
 * Writer
     * Email:writer@fsnd-capstone.com 
     * Password: Password@123
@@ -107,10 +109,7 @@ before running `source setup.sh` set the *bearer tokens* for both Writer & Admin
     * Password: Password@123
 
 
-<!-- ## [Postman](https://getpostman.com) Collections:
-- Import the postman collection, navigate to `Postman_tests` directory and select any collections of Postman endpoints tests:
-    * `Capstone-Heroku.postman_collection.json`: Heroku endpoints tests with (proper permission) bearer token included
-    * `Capstone-Local.postman_collection.json`: Local endpoints tests with (proper permission) bearer token included -->
+
 
 ## API Reference
 Getting Started
