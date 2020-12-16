@@ -17,10 +17,10 @@ My love for rading fantasy stories and Passion for Fullstack development has lea
     * Reader
         * Can view diffrent Stories & Genres
     * Writer
-        * Add ,update and delete Stories owned by them.
+        * Add, update and delete Stories owned by them.
     * Admin
-        * Add ,update and delete stories owned by writers. 
-        * Add ,update and delete storie genres.
+        * Add  and delete stories owned by writers. 
+        * Add, update and delete storie genres.
 
 ## Getting Started
 
