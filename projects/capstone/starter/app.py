@@ -267,6 +267,8 @@ def create_app(test_config=None):
       # prevent duplicate genres       
       exists = Genre.query.filter_by(type=type).all()
     
+    
+      # what would be sutable HTTP error code !    
       if exists :
         return jsonify({
           'success': False,
