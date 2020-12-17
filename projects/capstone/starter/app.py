@@ -79,14 +79,12 @@ def create_app(test_config=None):
     user_exists = User.query.filter_by(email=email).first()
     
     if not user_exists:
-      try:
         temp_name = (email.split("@")[0])
         new_user = User(email=email,name=temp_name)
         new_user.insert()
         author_id = new_user.id
-      
     else:
-      author_id =user_exists.id
+        author_id =user_exists.id
     
     
 
