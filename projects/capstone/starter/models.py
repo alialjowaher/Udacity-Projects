@@ -1,4 +1,4 @@
-import os , datetime
+import datetime
 from sqlalchemy import Column, String, Integer, DateTime, create_engine
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -20,8 +20,6 @@ def setup_db(app, database_path=database_path):
     db.create_all()
 
 
-
-
 class Story(db.Model):
     __tablename__ = "stories"
     id = db.Column(db.Integer(), primary_key=True)
@@ -31,16 +29,16 @@ class Story(db.Model):
     content = db.Column(db.Text())
     release_status = db.Column(db.Boolean, default=False)
     release_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    read_time = db.Column(db.Integer()) # in minutes
+    read_time = db.Column(db.Integer())  # in minutes
     author_id = db.Column(db.Integer(), db.ForeignKey('users.id'))
-   
+
     def cover(self):
         return {
             'title': self.title,
             'cover_art': self.cover_image,
             'read-time': self.read_time
         }
-    
+  
     def details(self):
         return {
             'id': self.id,
@@ -52,28 +50,28 @@ class Story(db.Model):
             'released': self.release_status,
             'read_time': self.read_time,
             'author_id': self.author_id
-            
         }
 
     def insert(self):
         db.session.add(self)
         db.session.commit()
-    
+
     def delete(self):
         db.session.delete(self)
         db.session.commit()
-    
+
     def update(self):
         db.session.commit()
 
-#TODO: User Class 
+
+# Done: User Class
 class User(db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer(), primary_key=True)
     email = db.Column(db.Text(), nullable=False)
-    name =  db.Column(db.String(120), nullable=False)
-    stories = db.relationship('Story', backref='users',lazy=True)
-    
+    name = db.Column(db.String(120), nullable=False)
+    stories = db.relationship('Story', backref='users', lazy=True)
+
     def insert(self):
         db.session.add(self)
         db.session.commit()
@@ -98,32 +96,34 @@ class Genre(db.Model):
             'id': self.id,
             'type': self.type
         }
-        
+
     def insert(self):
         db.session.add(self)
         db.session.commit()
-    
+
     def delete(self):
         db.session.delete(self)
         db.session.commit()
-    
+
     def update(self):
         db.session.commit()
 
 
-
-
-#TODO: Future Feature : reader reactions model (think emoji/likes)
+# TODO: Future Feature : reader reactions model (think emoji/likes)
 # class Reactions(db.Model):
 #     id = db.Column(db.Integer(), primary_key=True)
-#     story_id = db.Column(db.Integer, db.ForeignKey("story.id"), nullable=False)
-#     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+#     story_id = db.Column(db.Integer, db.ForeignKey("story.id"),
+# nullable=False)
+#     user_id = db.Column(db.Integer, db.ForeignKey("user.id"),
+# nullable=False)
 #     emoji_text = db.Column(db.ARRAY(db.String()), nullable=False)
 
-#TODO: Future Feature comments models 
+# TODO: Future Feature comments models
 
 # class Comments(db.Model):
 #      id = db.Column(db.Integer(), primary_key=True)
 #      text = db.Column(db.String(), nullable=False)
-#      story_id = db.Column(db.Integer, db.ForeignKey("story.id"), nullable=False)
-#      user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+#      story_id = db.Column(db.Integer, db.ForeignKey("story.id"),
+# nullable= False)
+#      user_id = db.Column(db.Integer, db.ForeignKey("user.id"),
+# nullable= False)
