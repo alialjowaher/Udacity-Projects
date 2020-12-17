@@ -94,7 +94,7 @@ before running `source setup.sh` set the *bearer tokens* for both Writer & Admin
 
 ## URL
 
-* Heroku: 
+* Heroku: https://tellatale.herokuapp.com/
 * Running locally: http://localhost:5000
 
 ## AUTH0 Login Details:
