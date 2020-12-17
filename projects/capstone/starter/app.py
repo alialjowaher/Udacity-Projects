@@ -85,8 +85,8 @@ def create_app(test_config=None):
         release_status = data.get('released')
         read_time = data.get('read_time')
 
-        if not title or not content or not genre
-        or not release_date or not release_status:
+        if (not title or not content or not genre
+           or not release_date or not release_status):
             abort(422)
 
         try:
@@ -97,7 +97,7 @@ def create_app(test_config=None):
                               read_time=read_time,
                               author_id=author_id)
             new_story.insert()
-        
+
             return jsonify({
               'success': True,
               'message': 'Your story has been Created'
@@ -109,16 +109,15 @@ def create_app(test_config=None):
     # Done get a single story by id
     @app.route('/stories/<int:story_id>', methods=['GET'])
     def get_story(story_id):
-      
+
         story = Story.query.get(story_id)
         # get genre type as name in story
         genre_type = Genre.query.get(story.genre)
         get_author_name = User.query.get(story.author_id)
         if story is None:
             abort(404)
-      
+
         story = story.details()
-      
         story["genre_name"] = genre_type.type
         story['author_name'] = get_author_name.name
 
@@ -154,7 +153,7 @@ def create_app(test_config=None):
         get_email = json.dumps(payload['https://tellatale.com/email'])
         email = (get_email.split('"')[1].split('"')[0])
         story_owner = User.query.get(story.author_id)
-      
+
         if story is None:
             abort(404)
         if story_owner.email != email:
@@ -168,27 +167,27 @@ def create_app(test_config=None):
             release_status = data.get('released')
             read_time = data.get('read_time')
 
-        if title:
-            story.title = title
-        if cover_image:
-            story.cover_image = cover_image
-        if genre:
-            story.genre = genre
-        if content:
-            story.content = content
-        if release_date:
-            story.release_date = release_date
-        if release_status:
-            story.release_status = release_status
-        if read_time:
-            story.read_time = read_time
+            if title:
+                story.title = title
+            if cover_image:
+                story.cover_image = cover_image
+            if genre:
+                story.genre = genre
+            if content:
+                story.content = content
+            if release_date:
+                story.release_date = release_date
+            if release_status:
+                story.release_status = release_status
+            if read_time:
+                story.read_time = read_time
 
-        story.update()
+            story.update()
 
-        return jsonify({
-          'success': True,
-          'story': [story.details()]
-        }), 200
+            return jsonify({
+              'success': True,
+              'story': [story.details()]
+            }), 200
 
         except Exception:
             abort(422)
@@ -261,10 +260,10 @@ def create_app(test_config=None):
         try:
             genre.delete()
 
-        return jsonify({
-          'success': True,
-          'message': 'Deleted'
-        })
+            return jsonify({
+              'success': True,
+              'message': 'Deleted'
+            })
 
         except Exception:
             abort(422)
