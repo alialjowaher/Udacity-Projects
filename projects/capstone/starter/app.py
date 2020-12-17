@@ -76,19 +76,18 @@ def create_app(test_config=None):
     # https://stackoverflow.com/questions/3368969/find-string-between-two-substrings
     get_email = json.dumps(payload['https://tellatale.com/email'])
     email = (get_email.split('"')[1].split('"')[0])
-    
-    # check if user exists or create new user
     user_exists = User.query.filter_by(email=email).first()
-    temp_name = (email.split("@")[0])
-    author_id =user_exists.id
     
     if not user_exists:
       try:
+        temp_name = (email.split("@")[0])
         new_user = User(email=email,name=temp_name)
         new_user.insert()
         author_id = new_user.id
-      except Exception:
-          abort(422)
+      
+    else:
+      author_id =user_exists.id
+    
     
 
     title = data.get('title')
@@ -413,9 +412,9 @@ def create_app(test_config=None):
 
   return app
 
-APP = create_app()
+app = create_app()
 
 
 
 if __name__ == '__main__':
-    APP.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=True)
