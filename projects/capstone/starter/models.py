@@ -93,7 +93,7 @@ class Story(db.Model):
         }
 
     def insert(self):
-            db.session.add(self)
+        db.session.add(self)
         db.session.commit()
 
     def delete(self):
