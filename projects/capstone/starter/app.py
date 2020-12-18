@@ -37,6 +37,12 @@ def create_app(test_config=None):
         current_stories = stories[start:end]
         return current_stories
 
+    @app.route('/', methods=['GET'])
+    def index():
+        return jsonify({
+            'message': 'Welcome to the TellaTale API'
+        })
+
     # Done Get all stories
     @app.route('/stories', methods=['GET'])
     def get_stories():
@@ -104,6 +110,7 @@ def create_app(test_config=None):
             }), 201
 
         except Exception:
+            print(sys.exc_info())
             abort(422)
 
     # Done get a single story by id
@@ -132,7 +139,7 @@ def create_app(test_config=None):
     def delete_story(payload, story_id):
         story = Story.query.get(story_id)
         if story == 0:
-            abort(404)  
+            abort(404)
         try:
             story.delete()
             return jsonify({
@@ -140,6 +147,7 @@ def create_app(test_config=None):
               'story_id': story_id
             }), 200
         except Exception:
+            print(sys.exc_info())
             abort(422)
 
     # Done Update story content
@@ -190,6 +198,7 @@ def create_app(test_config=None):
             }), 200
 
         except Exception:
+            print(sys.exc_info())
             abort(422)
 
     # Basic search by title or content and retrun released stories only
@@ -209,6 +218,7 @@ def create_app(test_config=None):
                    'total_stories': len(search_stories),
             })
         except Exception:
+            print(sys.exc_info())
             abort(404)
 
     # Done all genres list
@@ -247,6 +257,7 @@ def create_app(test_config=None):
               'message': 'New genre has been Created'
             }), 200
         except Exception:
+            print(sys.exc_info())
             abort(422)
 
     # Done Delete a genre
@@ -287,6 +298,7 @@ def create_app(test_config=None):
             }), 200
 
         except Exception:
+            print(sys.exc_info())
             abort(422)
 
     # Done get all stories in a genre

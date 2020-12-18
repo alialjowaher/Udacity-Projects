@@ -95,7 +95,7 @@ class TellaTaleTestCase(unittest.TestCase):
         res = self.client().patch('/stories/update/7',
                                   headers={'Authorization': WRITER_TOKEN},
                                   json={'title': 'updated title',
-                                        'cover_image':'test image link',
+                                        'cover_image': 'test image link',
                                         'genre': '1', 'content': 'content',
                                         'release_date': '2020-12-08 04:05:06',
                                         'released': True, 'read-time': 3})
@@ -145,7 +145,7 @@ class TellaTaleTestCase(unittest.TestCase):
         self.assertTrue(data['stories'])
         self.assertTrue(data['total_stories'])
         self.assertTrue(data['current_genre'])
- 
+
     def test_create_genre(self):
         res = self.client().post('/genres/add',
                                  headers={'Authorization': ADMIN_TOKEN},
@@ -158,11 +158,11 @@ class TellaTaleTestCase(unittest.TestCase):
     def test_update_genre(self):
         res = self.client().patch('/genres/update/1',
                                   headers={'Authorization': ADMIN_TOKEN},
-                                  json={'genre':'fantasy'})
+                                  json={'genre': 'fantasy'})
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
-        self.assertEqual(data['genre'],'fantasy')
+        self.assertEqual(data['genre'], 'fantasy')
 
     def test_delete_genre(self):
         res = self.client().delete('/genres/delete/110',
